@@ -28,11 +28,6 @@ namespace arqui
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-            //btnIzquierda.Enabled = false;
-            //btnDerecha.Enabled = false;
-            //btnSensor.Enabled = false;
-            //btnGrafico.Enabled = false;
             CambioEstado();
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -43,18 +38,12 @@ namespace arqui
         #region Botones
         private void btnIzquierda_Click(object sender, EventArgs e)
         {
-            //btnIzquierda.Enabled = false;
-            //btnDerecha.Enabled = true;
-            //txtRespuestaArduino.Text = "";
             CambioEstado(2);
             port.Write(string.Format(btnIzquierda.Text.ToLower()));
         }
 
         private void btnDerecha_Click(object sender, EventArgs e)
         {
-            //btnIzquierda.Enabled = true;
-            //btnDerecha.Enabled = false;
-            //txtRespuestaArduino.Text = "";
             CambioEstado(3);
             port.Write(string.Format(btnDerecha.Text.ToLower()));
         }
@@ -68,36 +57,16 @@ namespace arqui
         {
             if (isConnected)
                 Estado_Sensor(btnSensor.Text);
-                //if (btnSensor.Text == "Apagado")
-                //{
-                //    btnSensor.Text = "Encendido";
-                //    port.Write(string.Format(btnSensor.Text.ToLower()));
-                //}
-                //else
-                //{
-                //    btnSensor.Text = "Apagado";
-                //    port.Write(string.Format(btnSensor.Text.ToLower()));
-                //    txtRespuestaArduino.Text = "";
-                //}
-                
         }
         private void btnIniciar_Click(object sender, EventArgs e)
         {
             if (!isConnected)
             {
-                //btnIzquierda.Enabled = false;
-                //btnDerecha.Enabled = true;
-                //btnSensor.Enabled = true;
-                //btnGrafico.Enabled = true;
                 CambioEstado(1);
                 connectToArduino();
             }
             else
             {
-                //btnIzquierda.Enabled = false;
-                //btnDerecha.Enabled = false;
-                //btnSensor.Enabled = false;
-                //btnGrafico.Enabled = false;
                 CambioEstado();
                 disconnectFromArduino();
 
@@ -147,9 +116,7 @@ namespace arqui
                         {
                             bool formato_I = indata.Contains("i");
                             bool formato_D = indata.Contains("d");
-                            //txtRespuestaArduino.Text = formato ? "" : txtRespuestaArduino.Text += indata;
                             txtRespuestaArduino.Text = formato_I ? "": formato_D ? "": txtRespuestaArduino.Text += indata;
-
                             if (formato_I) CambioEstado(2);
                             else if (formato_D) CambioEstado(3);
 
@@ -182,12 +149,14 @@ namespace arqui
                 btnIzquierda.Enabled = false;
                 btnDerecha.Enabled = true;
                 txtRespuestaArduino.Text = "";
+                datos = new ArrayList();
             }
             else
             {
                 btnIzquierda.Enabled = true;
                 btnDerecha.Enabled = false;
                 txtRespuestaArduino.Text = "";
+                datos = new ArrayList();
             }
         }
         private void Estado_Sensor(string nombre_estado)

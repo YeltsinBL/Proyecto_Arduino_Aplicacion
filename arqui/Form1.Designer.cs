@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btnIzquierda = new System.Windows.Forms.Button();
             this.btnDerecha = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -49,7 +49,7 @@
             // 
             // btnIzquierda
             // 
-            this.btnIzquierda.Location = new System.Drawing.Point(204, 157);
+            this.btnIzquierda.Location = new System.Drawing.Point(204, 222);
             this.btnIzquierda.Name = "btnIzquierda";
             this.btnIzquierda.Size = new System.Drawing.Size(89, 28);
             this.btnIzquierda.TabIndex = 0;
@@ -59,7 +59,7 @@
             // 
             // btnDerecha
             // 
-            this.btnDerecha.Location = new System.Drawing.Point(295, 157);
+            this.btnDerecha.Location = new System.Drawing.Point(295, 222);
             this.btnDerecha.Name = "btnDerecha";
             this.btnDerecha.Size = new System.Drawing.Size(89, 28);
             this.btnDerecha.TabIndex = 3;
@@ -70,18 +70,29 @@
             // chart1
             // 
             this.chart1.BorderlineWidth = 5;
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea1.AxisX.LabelStyle.ForeColor = System.Drawing.Color.Blue;
+            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.AxisX.MajorTickMark.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.AxisX.MinorTickMark.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.AxisY.LabelStyle.ForeColor = System.Drawing.Color.Blue;
+            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.AxisY.MajorTickMark.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.AxisY.MinorTickMark.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(400, 23);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart1.Series.Add(series2);
+            series1.BorderWidth = 2;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Color = System.Drawing.Color.Blue;
+            series1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            series1.LabelForeColor = System.Drawing.Color.Blue;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(415, 327);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
@@ -109,6 +120,7 @@
             // 
             // cboPuertos
             // 
+            this.cboPuertos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPuertos.FormattingEnabled = true;
             this.cboPuertos.Location = new System.Drawing.Point(263, 42);
             this.cboPuertos.Name = "cboPuertos";
@@ -117,7 +129,7 @@
             // 
             // btnSensor
             // 
-            this.btnSensor.Location = new System.Drawing.Point(204, 224);
+            this.btnSensor.Location = new System.Drawing.Point(204, 163);
             this.btnSensor.Name = "btnSensor";
             this.btnSensor.Size = new System.Drawing.Size(180, 23);
             this.btnSensor.TabIndex = 8;
@@ -147,11 +159,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(249, 77);
+            this.label2.Location = new System.Drawing.Point(249, 78);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 13);
+            this.label2.Size = new System.Drawing.Size(87, 13);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Estado Sistema:";
+            this.label2.Text = "Conectar Puerto:";
             // 
             // label3
             // 
@@ -165,16 +177,16 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(275, 198);
+            this.label4.Location = new System.Drawing.Point(249, 141);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(43, 13);
+            this.label4.Size = new System.Drawing.Size(83, 13);
             this.label4.TabIndex = 13;
-            this.label4.Text = "Sensor:";
+            this.label4.Text = "Estado Sistema:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(273, 135);
+            this.label5.Location = new System.Drawing.Point(273, 200);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(45, 13);
             this.label5.TabIndex = 14;

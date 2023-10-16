@@ -45,29 +45,7 @@ void loop() {
     }
     if(inputString.substring(0,1)=="e"){
       //Serial.println("Encendido");
-      estado_pulsador1=digitalRead(pulsador1);
-      estado_pulsador2=digitalRead(pulsador2);
-      if(estado_pulsador1==HIGH){
-        angulo=180;
-        carril=1;
-        Serial.println("d");
-      }
-      if(estado_pulsador2==HIGH){
-        angulo=0;
-        carril=0;
-        Serial.println("i");
-      }
-      if(carril==0){
-        digitalWrite(led2, HIGH);
-        digitalWrite(led1, LOW);
-        angulo=0;
-        //Serial.println("Izquierda");
-      }else{
-        digitalWrite(led1, HIGH);
-        digitalWrite(led2, LOW);
-        angulo=180;
-        //Serial.println("Derecha");
-      }
+      botones();
       myservo.write(angulo); 
       sensorHumerdad();
     }
@@ -78,6 +56,7 @@ void loop() {
       carril=0;
       myservo.write(angulo); 
       sensorHumerdad();
+      botones();
     }
     if(inputString.substring(0,1)=="d"){
       digitalWrite(led1, HIGH);
@@ -86,6 +65,7 @@ void loop() {
       carril=1;
       myservo.write(angulo); 
       sensorHumerdad();
+      botones();
     }
   }
   delay (1000) ;
@@ -117,6 +97,40 @@ void sensorHumerdad(){
   // Serial.println("%");
   // }
   delay (1000) ;
+}
+void botones(){
+  estado_pulsador1=digitalRead(pulsador1);
+  estado_pulsador2=digitalRead(pulsador2);
+  if(estado_pulsador1==HIGH){
+    Serial.println("d");
+    angulo=180;
+    carril=1;
+    digitalWrite(led1, HIGH);
+    digitalWrite(led2, LOW);
+    inputString = "d";
+  }
+  if(estado_pulsador2==HIGH){
+    Serial.println("i");
+    angulo=0;
+    carril=0;
+    digitalWrite(led2, HIGH);
+    digitalWrite(led1, LOW);
+    inputString = "i";
+  }
+  if(carril==0){
+    digitalWrite(led2, HIGH);
+    digitalWrite(led1, LOW);
+    angulo=0;
+    //Serial.println("Izquierda");
+  }
+  // else{
+  //   digitalWrite(led1, HIGH);
+  //   digitalWrite(led2, LOW);
+  //   //angulo=180;
+  //   //Serial.println("Derecha");
+  // }
+  myservo.write(angulo); 
+  sensorHumerdad();
 }
 void serialEvent() {
  // Verificar una a una el caractrer de los datos ingresados
