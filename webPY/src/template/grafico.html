@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Riego</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'app.js') }}"></script> 
+    
+    <link href="//mincss.com/entireframework.min.css" rel="stylesheet" type="text/css" />
+    <link href="{{url_for('static', filename = 'app.css')}}" rel="stylesheet">
+</head>
+<body>
+    <h1>Arduino - Python - Sql - Html - Css - JS - SocketIO</h1>
+
+    
+    <div class="container">
+            <div class="card-body">
+                <!--Formulario-->
+                <form action="/user" method="post">
+                    <div >
+                        <div>
+                            <label>UserName</label>
+                            <input type="text" name="username" >
+                        </div>
+                        <div>
+                            <label>Password</label>
+                            <input type="text" name="paswword" >
+                        </div>
+                        <div>
+                            <button type="submit">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        <div class="hero">
+            <h2>Gráfico de Registro de por Planta</h2>
+            <div class="chart-container">
+            <canvas id="myChart" width="1000" height="600"></canvas>
+            </div>
+      </div>
+    </div>
+    
+</body>
+</html>
