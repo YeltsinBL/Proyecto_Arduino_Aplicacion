@@ -1,25 +1,4 @@
-// const ctx = document.getElementById('myChart');
-
-//   new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//       labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-//       datasets: [{
-//         label: '# of Votes',
-//         data: [12, 19, 3, 5, 2, 3],
-//         borderWidth: 1
-//       }]
-//     },
-//     options: {
-//       scales: {
-//         y: {
-//           beginAtZero: true
-//         }
-//       }
-//     }
-//   });
-
-  $(document).ready(function () {
+$(document).ready(function () {
     const ctx = document.getElementById('myChart');
   
     const myChart = new Chart(ctx, {
@@ -50,14 +29,28 @@
   
     const MAX_DATA_COUNT = 10;
     //connect to the socket server.
-    //   var socket = io.connect("http://" + document.domain + ":" + location.port);
     var socket = io.connect();
   
-    //receive details from server
-    socket.on("updateSensorData", function (msg) {
+    $('form#form-control').submit(function(event) {
+      // Validar campos
+      let x = document.getElementById("temperatura_inicial").value;
+      if (x < 0 || x > 100 || x == '') {
+        document.getElementById("demo").innerHTML = "Valores permitidos desde 0 hasta 100";
+      } 
+      else {
+        document.getElementById("demo").innerHTML = "";
+        // Enviar datos al Socket
+        socket.emit('my_room_event', {descripcion: $('#descripcion').val(), temperatura_inicial: $('#temperatura_inicial').val(),
+        temperatura_final: $('#temperatura_final').val(), humedad_inicial: $('#humedad_inicial').val(), humedad_final: $('#humedad_final').val()});
+      }
+      return false; // para no salir de la página principal
+    });
+
+    //recibir los datos
+    socket.connect().on("updateSensorData", function (msg) {
       console.log("Received sensorData :: " + msg.date + " :: " + msg.value);
   
-      // Show only MAX_DATA_COUNT data
+      // Mostrar solo la cantidad de datos permitidos (10)
       if (myChart.data.labels.length > MAX_DATA_COUNT) {
         removeFirstData();
       }

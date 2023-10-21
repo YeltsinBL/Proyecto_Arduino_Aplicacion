@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request
-from flask_socketio import SocketIO, send
+"""Aplicación de Python Principal"""
 import os
-
-
-from random import random
 from threading import Lock
-from datetime import datetime
+from flask import Flask, render_template, request
+from flask_socketio import SocketIO, emit
+
+import database as db
 
 """Background Thread"""
 thread = None
@@ -21,38 +20,64 @@ socketio = SocketIO(app,  cors_allowed_origins='*') # empieza la conexión
 
 @app.route('/')
 def home():
-    """Página principal"""
+    """Página principal HTML"""
     return render_template('grafico.html')
 
-def get_current_datetime():
-    """ Get current date time """
-    now = datetime.now()
-    return now.strftime("%m/%d/%Y %H:%M:%S")
-
-
 def background_thread():
+    """ Obtener valores para el Gráfico al mostrar la página"""
+    SQL_QUERY = """
+    select CONCAT(CONVERT(varchar(50),Temperatura_Inicial_Fecha,103),' ',CONVERT(varchar(50),
+    Temperatura_Inicial_Fecha,24)) as [Fecha Temperatura Inicial],
+	CONVERT(varchar(6),Temperatura_Inicial) as [Temperatura Inicial] from Estadistica
     """
-    Generate random sequence of dummy sensor values and send it to our clients
-    """
-    print("Generating random sensor values")
-    while True:
-        dummy_sensor_value = round(random() * 100, 3)
-        socketio.emit('updateSensorData', {'value': dummy_sensor_value,
-                                           "date": get_current_datetime()})
+    cursor = db.database.cursor()
+    cursor.execute(SQL_QUERY)
+    records = cursor.fetchall()
+    cursor.close()
+    for record in records:
+        emit('updateSensorData', {'value': record.get("Temperatura Inicial"),
+                                    "date": record.get("Fecha Temperatura Inicial")})
         socketio.sleep(1)
 
 
 @socketio.on('connect')
 def connect():
-    """ Decorator for connect """
-    global thread
+    """Principal - Decorator for connect """
+    background_thread()
     print('Client connected')
-
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socketio.start_background_task(background_thread)
-
+    # global thread
+    # with thread_lock:
+    #     if thread is None:
+    #         thread = socketio.start_background_task(background_thread)
+@socketio.event
+def my_room_event(message):
+    """Registrar en BD y obtener el valor de registro para agregarlo al Socket"""
+    if message['descripcion'] and message['temperatura_inicial'] and\
+        message['temperatura_final'] and message['humedad_inicial'] and message['humedad_final'] :
+        cursor=db.database.cursor()
+        sql = "insert into Estadistica (Descripcion, Temperatura_Inicial, Temperatura_Final,\
+            Humedad_Inicial, Humedad_Final) values(%s,%s,%s,%s,%s);"
+        data = (message['descripcion'], message['temperatura_inicial'],
+                message['temperatura_final'], message['humedad_inicial'],
+                message['humedad_final'])
+        cursor.execute(sql,data)
+        db.database.commit()
+        id_inserted = cursor.lastrowid
+        print("Id Registrado", id_inserted)
+        cursor.close()
+        print("Obteniendo información")
+        cursor = db.database.cursor()
+        sql="select CONCAT(CONVERT(varchar(50),Temperatura_Inicial_Fecha,103),' ',\
+            CONVERT(varchar(50), Temperatura_Inicial_Fecha,24)) as [Fecha Temperatura Inicial],\
+            CONVERT(varchar(6),Temperatura_Inicial) as [Temperatura Inicial] from Estadistica\
+            where IdEStadistica=%s"
+        cursor.execute(sql, id_inserted)
+        records = cursor.fetchall()
+        cursor.close()
+        for record in records:
+            emit('updateSensorData', {'value': record.get("Temperatura Inicial"),
+                                    "date": record.get("Fecha Temperatura Inicial")},
+                                    broadcast=True)
 
 @socketio.on('disconnect')
 def disconnect():

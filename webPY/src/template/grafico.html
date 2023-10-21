@@ -18,26 +18,38 @@
 
     
     <div class="container">
-            <div class="card-body">
-                <!--Formulario-->
-                <form action="/user" method="post">
-                    <div >
-                        <div>
-                            <label>UserName</label>
-                            <input type="text" name="username" >
-                        </div>
-                        <div>
-                            <label>Password</label>
-                            <input type="text" name="paswword" >
-                        </div>
-                        <div>
-                            <button type="submit">Guardar</button>
-                        </div>
+        <div class="card-body">
+            <!--Formulario-->
+            <form id="form-control" method="POST" action='#'>
+                <div >
+                    <div>
+                        <label>Descripción Planta</label>
+                        <input type="text" id="descripcion" >
                     </div>
-                </form>
+                    <div>
+                        <label>Temperatura Inicial</label>
+                        <input type="number" id="temperatura_inicial" step=".01" max="100" min="0">
+                        <p id="demo"></p>
+                    </div>
+                    <div>
+                        <label>Temperatura Final</label>
+                        <input type="number" id="temperatura_final" step=".01">
+                    </div>
+                    <div>
+                        <label>Humedad Inicial</label>
+                        <input type="number" id="humedad_inicial" step=".01">
+                    </div>
+                    <div>
+                        <label>Humedad Final</label>
+                        <input type="number" id="humedad_final" step=".01">
+                    </div>
+                    <div>
+                        <button type="submit" >Guardar</button>
+                    </div>
+                </div>
+            </form>
 
-            </div>
-
+        </div>
         <div class="hero">
             <h2>Gráfico de Registro de por Planta</h2>
             <div class="chart-container">
