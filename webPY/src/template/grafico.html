@@ -20,6 +20,21 @@
     <div class="container">
         <div class="card-body">
             <!--Formulario-->
+            <form id="form-conectar" method="POST" action='#'>
+                <div class="div_conectar">
+                    <label>Puertos</label>
+                    <select name="ports" id="ports"></select>
+                    <button type="submit" id="conn" value="conn">Conectar</button>
+                    <button type="submit" id="on" value="on">Encender</button>
+                    <button type="submit" id="right" value="right">Derecha</button>
+                    <button type="submit" id="left" value="left">Izquierda</button>
+                    <button type="submit" id="dis" value="dis">Desconectar</button>
+                </div>
+                <div id="mensaje_estado" class="alert_mensaje_estado"></div>
+            </form>
+        </div>
+        <div class="card-body">
+            <!--Formulario-->
             <form id="form-control" method="POST" action='#'>
                 <div >
                     <div>
@@ -46,6 +61,7 @@
                     <div>
                         <button type="submit" >Guardar</button>
                     </div>
+                    <div id="mensaje" class="alert"></div>
                 </div>
             </form>
 

@@ -1,8 +1,10 @@
 """Aplicación de Python Principal"""
 import os
 from threading import Lock
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit
+import serial
+import serial.tools.list_ports as list_comports
 
 import database as db
 
@@ -36,7 +38,8 @@ def background_thread():
     cursor.close()
     for record in records:
         emit('updateSensorData', {'value': record.get("Temperatura Inicial"),
-                                    "date": record.get("Fecha Temperatura Inicial")})
+                                    "date": record.get("Fecha Temperatura Inicial"),
+                                    'puertos':listar_puertos()})
         socketio.sleep(1)
 
 
@@ -76,13 +79,59 @@ def my_room_event(message):
         cursor.close()
         for record in records:
             emit('updateSensorData', {'value': record.get("Temperatura Inicial"),
-                                    "date": record.get("Fecha Temperatura Inicial")},
+                                    "date": record.get("Fecha Temperatura Inicial"),
+                                    'puertos':listar_puertos()},
                                     broadcast=True)
 
 @socketio.on('disconnect')
 def disconnect():
     """ Decorator for disconnect """
     print('Client disconnected',  request.sid)
+
+# region Conexión al Arduino
+
+def listar_puertos():
+    """Lista de los puertos disponibles"""
+    # Listar los puertos disponibles
+    list_ports = []
+    get_ports = list_comports.comports()
+    list_ports.append("COM2")
+    for port in sorted(get_ports):
+        print(port.name)
+        list_ports.append(port.name)
+    print(list_ports)
+    return list_ports
+
+serialobj:serial
+@socketio.event
+def acciones_arduino(datos):
+    """Establecer conexión con el arduino"""
+    print(datos)
+
+    global serialobj
+    try:
+
+        if datos['boton'] == 'conn':
+            serialobj = serial.Serial(datos['valor'],9600)
+            if serialobj.isOpen():
+                serialobj.close()
+            serialobj.open()
+            print('com3 is open', serialobj.isOpen())
+        if datos['boton'] == 'on':
+            serialobj.write(str(datos['valor']).encode())
+        if datos['boton'] == 'right':
+            serialobj.write(str(datos['valor']).encode())
+        if datos['boton'] == 'left':
+            serialobj.write(str(datos['valor']).encode())
+        if datos['boton'] == 'dis':
+            serialobj.write(str(datos['valor']).encode())
+            serialobj.close()
+            print('com3 is open', serialobj.isOpen())
+    except Exception:
+        print('No se llegó los datos')
+
+    return redirect(url_for('home'))
+# endregion
 
 
 if __name__ == '__main__':

@@ -9,6 +9,7 @@
 - Instalar Marshmallow
 - Instalar Dotenv
 - Instalar Flask-socketio
+- Instalar PySerial
 
 ```sh
 # Instalar entorno virtual
@@ -27,4 +28,6 @@ pip install flask_marshmallow marshmallow-sqlalchemy
 pip install python-dotenv
 # Instalar Flask-socketio
 pip install flask-socketio
+# Instalar PySerial
+pip install pyserial
 ```
