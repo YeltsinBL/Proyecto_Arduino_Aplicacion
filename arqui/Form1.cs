@@ -44,14 +44,16 @@ namespace arqui
         private void btnIzquierda_Click(object sender, EventArgs e)
         {
             CambioEstado(2);
-            port.Write(string.Format(btnIzquierda.Text.ToLower()));
+            //port.Write(string.Format(btnIzquierda.Text.ToLower()));
+            port.Write("i");
             descripcion = 1;
         }
 
         private void btnDerecha_Click(object sender, EventArgs e)
         {
             CambioEstado(3);
-            port.Write(string.Format(btnDerecha.Text.ToLower()));
+            //port.Write(string.Format(btnDerecha.Text.ToLower()));
+            port.Write("d");
             descripcion = 2;
             txtDatos.Focus();
         }
@@ -202,12 +204,14 @@ namespace arqui
             if (nombre_estado == "Apagado")
             {
                 btnSensor.Text = "Encendido";
-                port.Write(string.Format(btnSensor.Text.ToLower()));
+                //port.Write(string.Format(btnSensor.Text.ToLower()));
+                port.Write("e");
             }
             else
             {
                 btnSensor.Text = "Apagado";
-                port.Write(string.Format(btnSensor.Text.ToLower()));
+                //port.Write(string.Format(btnSensor.Text.ToLower()));
+                port.Write("a");
                 txtRespuestaArduino.Text = "";
             }
         }
