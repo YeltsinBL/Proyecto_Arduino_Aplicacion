@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO.Ports;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace arqui
 {
     public partial class Form1 : Form
     {
+        SqlConnection conexion = new SqlConnection("Data Source=YELTSINPCGAMER; Initial Catalog=TestingPruebas; Integrated Security=True");
+        int descripcion=1;
+
         String[] ports;
         SerialPort port;
         bool isConnected = false;
-        ArrayList datos = new ArrayList();
+        //ArrayList datos = new ArrayList();
         
         public Form1()
         {
@@ -40,23 +45,49 @@ namespace arqui
         {
             CambioEstado(2);
             port.Write(string.Format(btnIzquierda.Text.ToLower()));
+            descripcion = 1;
         }
 
         private void btnDerecha_Click(object sender, EventArgs e)
         {
             CambioEstado(3);
             port.Write(string.Format(btnDerecha.Text.ToLower()));
+            descripcion = 2;
+            txtDatos.Focus();
+        }
+
+        private void btnGuardarDatos_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                conexion.Open();
+                string consulta = "INSERT INTO T_Estadistica (Descripcion, Humedad) VALUES (@Descripcion, @Valor)";
+                SqlCommand comando = new SqlCommand(consulta, conexion);
+                comando.Parameters.AddWithValue("@Valor", txtDatos.Text);
+                comando.Parameters.AddWithValue("@Descripcion", descripcion);
+                comando.ExecuteNonQuery();
+                MessageBox.Show("Datos guardados correctamente");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            finally
+            {
+                conexion.Close();
+            }
+            txtDatos.Clear();
+            Mostrar_Grafico(btnIzquierda.Enabled == false ? "1" : "2"); 
         }
 
         private void btnGrafico_Click(object sender, EventArgs e)
         {
-            Mostrar_Grafico();
+            Mostrar_Grafico(btnIzquierda.Enabled == false ? "1" : "2");
         }
 
         private void btnSensor_Click(object sender, EventArgs e)
         {
-            if (isConnected)
-                Estado_Sensor(btnSensor.Text);
+            if (isConnected) Estado_Sensor(btnSensor.Text);
         }
         private void btnIniciar_Click(object sender, EventArgs e)
         {
@@ -116,7 +147,7 @@ namespace arqui
                         {
                             bool formato_I = indata.Contains("i");
                             bool formato_D = indata.Contains("d");
-                            txtRespuestaArduino.Text = formato_I ? "": formato_D ? "": txtRespuestaArduino.Text += indata;
+                            txtRespuestaArduino.Text = formato_I ? "" : formato_D ? "" :txtRespuestaArduino.Text += indata;
                             if (formato_I) CambioEstado(2);
                             else if (formato_D) CambioEstado(3);
 
@@ -137,6 +168,7 @@ namespace arqui
                 btnDerecha.Enabled = false;
                 btnSensor.Enabled = false;
                 btnGrafico.Enabled = false;
+                btnGuardarDatos.Enabled = false;
 
             }else if(estado == 1)
             {
@@ -144,19 +176,25 @@ namespace arqui
                 btnDerecha.Enabled = true;
                 btnSensor.Enabled = true;
                 btnGrafico.Enabled = true;
-            }else if(estado == 2)
+                btnGuardarDatos.Enabled = true;
+            }
+            else if(estado == 2)
             {
                 btnIzquierda.Enabled = false;
                 btnDerecha.Enabled = true;
                 txtRespuestaArduino.Text = "";
-                datos = new ArrayList();
+                //datos = new ArrayList();
+                chart1.Visible = true;
+                chart1.Series.Clear();
             }
             else
             {
                 btnIzquierda.Enabled = true;
                 btnDerecha.Enabled = false;
                 txtRespuestaArduino.Text = "";
-                datos = new ArrayList();
+                //datos = new ArrayList();
+                chart1.Visible = true;
+                chart1.Series.Clear();
             }
         }
         private void Estado_Sensor(string nombre_estado)
@@ -174,7 +212,7 @@ namespace arqui
             }
         }
 
-        private void Mostrar_Grafico()
+        private void Mostrar_Grafico(string seleccion = "1")
         {
             // Ocultar el gráfico
             chart1.Visible = true;
@@ -183,27 +221,43 @@ namespace arqui
             chart1.Series.Clear();
 
             // Crear una nueva serie para los datos
-            var serie = new System.Windows.Forms.DataVisualization.Charting.Series("Datos");
+            var serie = new Series("Datos");
 
             // Configurar el tipo de gráfico (en este caso, gráfico de líneas)
-            serie.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            serie.ChartType = SeriesChartType.Line;
 
-            string[] separatingStrings = { "\tr6\tr\tn", "\tr\tn", "\tr", "\r\n", "\n", "\r" };
-            string[] words = txtRespuestaArduino.Text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
+            // Conecta a la base de datos y recupera los datos
+            SqlCommand cmd = new SqlCommand($"SELECT Humedad FROM T_Estadistica where descripcion = {seleccion}", conexion);
 
-            foreach (var word in words)
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            foreach (DataRow row in table.Rows)
             {
-                datos.Add(Convert.ToInt32(word));
+                double y = Convert.ToDouble(row["Humedad"]);
+                if (serie.Points.Count > 10) serie.Points.RemoveAt(0);
+                
+                serie.Points.AddY(y);
             }
-            foreach (int dato in datos)
-            {
-                serie.Points.AddY(dato);
-            }
+
+            //string[] separatingStrings = { "\tr6\tr\tn", "\tr\tn", "\tr", "\r\n", "\n", "\r" };
+            //string[] words = txtRespuestaArduino.Text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
+
+            //foreach (var word in words)
+            //{
+            //    datos.Add(Convert.ToInt32(word));
+            //}
+            //foreach (int dato in datos)
+            //{
+            //    serie.Points.AddY(dato);
+            //}
 
             // Agregar la serie al gráfico
             chart1.Series.Add(serie);
         }
- 
+
         #endregion
+
+        
     }
 }

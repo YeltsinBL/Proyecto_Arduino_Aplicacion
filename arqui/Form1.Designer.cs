@@ -44,6 +44,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtDatos = new System.Windows.Forms.TextBox();
+            this.btnGuardarDatos = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -101,7 +104,7 @@
             // 
             // btnGrafico
             // 
-            this.btnGrafico.Location = new System.Drawing.Point(204, 274);
+            this.btnGrafico.Location = new System.Drawing.Point(204, 319);
             this.btnGrafico.Name = "btnGrafico";
             this.btnGrafico.Size = new System.Drawing.Size(180, 31);
             this.btnGrafico.TabIndex = 5;
@@ -192,11 +195,43 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Bloques";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(201, 260);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(40, 13);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "DATO:";
+            // 
+            // txtDatos
+            // 
+            this.txtDatos.Location = new System.Drawing.Point(252, 257);
+            this.txtDatos.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDatos.Name = "txtDatos";
+            this.txtDatos.Size = new System.Drawing.Size(132, 20);
+            this.txtDatos.TabIndex = 17;
+            // 
+            // btnGuardarDatos
+            // 
+            this.btnGuardarDatos.Location = new System.Drawing.Point(204, 286);
+            this.btnGuardarDatos.Margin = new System.Windows.Forms.Padding(2);
+            this.btnGuardarDatos.Name = "btnGuardarDatos";
+            this.btnGuardarDatos.Size = new System.Drawing.Size(180, 24);
+            this.btnGuardarDatos.TabIndex = 20;
+            this.btnGuardarDatos.Text = "GUARDAR DATOS";
+            this.btnGuardarDatos.UseVisualStyleBackColor = true;
+            this.btnGuardarDatos.Click += new System.EventHandler(this.btnGuardarDatos_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 376);
+            this.Controls.Add(this.btnGuardarDatos);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtDatos);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -235,6 +270,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtDatos;
+        private System.Windows.Forms.Button btnGuardarDatos;
     }
 }
 
