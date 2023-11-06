@@ -49,15 +49,15 @@ def sql_lista_medicion():
                     ORDER BY m.fecha_registro desc
                     """
                 cursor.execute(query)
-                empleados = cursor.fetchall()
-        return empleados
+                mediciones = cursor.fetchall()
+        return mediciones
     except Exception as e:
         print(
-            f"Errro en la función sql_lista_empleadosBD: {e}")
+            f"Errro en la función sql_lista_medicion: {e}")
         return None
 
 def medicion_reporte():
-    """Obtener datos para el Reporte en Excel de los Empleados"""
+    """Obtener datos para el Reporte en Excel de las mediciones"""
     try:
         with connectionBD() as conexion_sql:
             with conexion_sql.cursor() as cursor:
@@ -71,8 +71,8 @@ def medicion_reporte():
                     ORDER BY m.fecha_registro desc
                     """
                 cursor.execute(query)
-                empleados = cursor.fetchall()
-        return empleados
+                mediciones = cursor.fetchall()
+        return mediciones
     except Exception as e:
         print(
             f"Error en la función medicion_reporte: {e}")
@@ -80,7 +80,7 @@ def medicion_reporte():
 
 def generar_reporte_excel_medicion():
     """Reporte de Excel para Mediciones"""
-    data_empleados = medicion_reporte()
+    data_mediciones = medicion_reporte()
     wb = openpyxl.Workbook()
     hoja = wb.active
 
@@ -91,7 +91,7 @@ def generar_reporte_excel_medicion():
     hoja.append(cabecera_excel)
 
     # Agregar los registros a la hoja
-    for registro in data_empleados:
+    for registro in data_mediciones:
         medicion_sector = registro['medicion_sector']
         fecha_registro = registro['fecha_registro']
         humedad_inicial = registro['humedad_inicial']

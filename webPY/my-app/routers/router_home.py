@@ -4,7 +4,7 @@ from flask import render_template, request, flash, redirect, url_for, session,  
 # Importando conexión a BD
 from controllers.funciones_home import *
 import serial
-PATH_URL = "public/empleados"
+PATH_URL = "public/mediciones"
 
 # region Medición
 @app.route('/registrar-medicion', methods=['GET'])

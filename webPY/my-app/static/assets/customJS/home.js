@@ -11,13 +11,3 @@ function fadeOut(element) {
   }, 50);
 }
 fadeOut(loaderOut);
-
-/*function eliminarEmpleado(id_empleado, foto_empleado) {
-  if (confirm("¿Estas seguro que deseas Eliminar el empleado?")) {
-    let url = `/borrar-empleado/${id_empleado}/${foto_empleado}`;
-    if (url) {
-      window.location.href = url;
-    }
-  }
-}*/
-

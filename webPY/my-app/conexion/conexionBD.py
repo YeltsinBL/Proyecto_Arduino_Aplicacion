@@ -13,7 +13,7 @@ def connectionBD():
             database='Invernadero',
             as_dict=True)
         if database:
-            print("Conexión exitosa a la BD")
+            # print("Conexión exitosa a la BD")
             return database
     except Exception as error:
         print(f"No se pudo conectar: {error}")
