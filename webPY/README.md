@@ -30,7 +30,7 @@ Dashboard
 
 Registrar Medición
 
-![registrar_medicion](./imgweb/registra_medicion.PNG)
+![registrar_medicion](./imgweb/registrar_medicion.PNG)
 
 Lista Medición
 
