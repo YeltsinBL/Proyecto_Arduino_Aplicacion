@@ -1,33 +1,45 @@
-# PYTHON CON FLASK Y SQL SERVER
+# PYTHON CON FLASK, SQL SERVER, ARDUINO, SOCKET, HTML, JS, CSS
 
 ## Instalaciones
 
 - Crear y activar el entorno virtual.
-- Instalar Flask.
-- Instalar Flask-SQLAlchemy.
-- Instalar PyMSSQL
-- Instalar Marshmallow
-- Instalar Dotenv
-- Instalar Flask-socketio
-- Instalar PySerial
+- Instalar los paquetes indicados en el archivo Requirements
 
 ```sh
 # Instalar entorno virtual
 py -m venv env
 # Activar entorno virtual
 .\env\Scripts\activate
-# Instalar Flask
-pip install Flask
-# Instalar SQLAlchemy
-pip install -U Flask-SQLAlchemy
-# Instalar PyMSSQL
-pip install pymssql
-# Instalar Marshmallow
-pip install flask_marshmallow marshmallow-sqlalchemy
-# Instalar Dotenv
-pip install python-dotenv
-# Instalar Flask-socketio
-pip install flask-socketio
-# Instalar PySerial
-pip install pyserial
+# Instalar los paquetes indicados en el Requirements
+pip install -r requirements.txt
 ```
+
+## FORMULARIOS
+
+Login
+
+![login](./imgweb/login.PNG)
+
+Crear Cuenta
+
+![crear_usuario](./imgweb/crear_cuenta.PNG)
+
+Dashboard
+
+![dashboard](./imgweb/dashboard.PNG)
+
+Registrar Medición
+
+![registrar_medicion](./imgweb/registra_medicion.PNG)
+
+Lista Medición
+
+![lista_medicion](./imgweb/lista_mediciones.PNG)
+
+Lista Usuario
+
+![lista_usuario](./imgweb/registrar_medicion.PNG)
+
+Perfil
+
+![perfil](./imgweb/perfil.PNG)

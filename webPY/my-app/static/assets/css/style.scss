@@ -1,0 +1,41 @@
+
+.card {
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    min-height: auto;
+
+    h3 {
+        text-align: center;
+        padding-top: 24px;
+        padding-bottom: 8px;
+    }
+
+    .card-content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .gaugeMeter {
+        height: 280px;
+        position: relative;
+    }
+
+    u {
+        text-decoration: none;
+    }
+
+    span {
+        display: none;
+    }
+
+   p {
+        width: 100%;
+        height: min-content !important;
+        position: absolute;
+        font-size: 1.5rem !important;
+        line-height: 0 !important;
+        bottom: 40px;
+        margin: auto;
+        text-align: center;
+    }
+}

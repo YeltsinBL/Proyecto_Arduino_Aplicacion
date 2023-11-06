@@ -1,0 +1,13 @@
+{% for medicion in dataBusqueda %}
+<tr id="medicion_{{ medicion.idmediciones }}">
+  <td>{{ loop.index }}</td>
+  <td>{{ medicion.medicion_sector }}</td>
+  <td>{{ medicion.fecha_registro }}</td>
+  <td>{{ medicion.humedad_inicial }}</td>
+  <td>{{ medicion.humedad_final }}</td>
+  <td>{{ medicion.temperatura_inicial }}</td>
+  <td>{{ medicion.temperatura_final }}</td>
+  
+</tr>
+
+{% endfor %}

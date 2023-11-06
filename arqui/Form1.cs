@@ -244,18 +244,6 @@ namespace arqui
                 serie.Points.AddY(y);
             }
 
-            //string[] separatingStrings = { "\tr6\tr\tn", "\tr\tn", "\tr", "\r\n", "\n", "\r" };
-            //string[] words = txtRespuestaArduino.Text.Split(separatingStrings, StringSplitOptions.RemoveEmptyEntries);
-
-            //foreach (var word in words)
-            //{
-            //    datos.Add(Convert.ToInt32(word));
-            //}
-            //foreach (int dato in datos)
-            //{
-            //    serie.Points.AddY(dato);
-            //}
-
             // Agregar la serie al gráfico
             chart1.Series.Add(serie);
         }
