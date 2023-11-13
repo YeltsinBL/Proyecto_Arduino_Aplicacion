@@ -30,7 +30,8 @@ $(document).ready(function () {
             console.error(error);
         }
     }
-    var cant=0;
+    //var cant=0;
+    var valor_temperatura=0;
     var valor_humedad=0;
     var socket = io();
     /** Sector Botones Emitir Socket**/
@@ -39,24 +40,24 @@ $(document).ready(function () {
         socket.emit('acciones_arduino', {boton:btnconectado,valor: $('#medicion_puertos').val(), datosarduino:$('#medicion_puertos').val()});
     }, false);
     document.querySelector("#btndesconectado").addEventListener("change", function(){
-        cant =0;
+        //cant =0;
         btndesconectado = document.getElementById('btndesconectado').value;
         socket.emit('acciones_arduino', {boton:btndesconectado,valor: "a", datosarduino:$('#medicion_puertos').val()});
         document.getElementById('btnapagado').checked=true;
     }, false);
     document.querySelector("#btnencendido").addEventListener("change", function(){
-        if(cant==0){
-            cant++;
+        /*if(cant==0){
+            cant++;*/
             btnencendido = document.getElementById('btnencendido').value;
             socket.emit('acciones_arduino', {boton:btnencendido,valor: "e", datosarduino:$('#medicion_puertos').val()});
-
+/*
         }else{
             socket.emit('acciones_arduino', {boton:"right",valor: "i", datosarduino:$('#medicion_puertos').val()});
-        }
+        }*/
     }, false);
     document.querySelector("#btnapagado").addEventListener("change", function(){
         btnapagado = document.getElementById('btnapagado').value;
-        socket.emit('acciones_arduino', {boton:"left",valor: "d", datosarduino:$('#medicion_puertos').val()});
+        socket.emit('acciones_arduino', {boton:btnapagado,valor: "d", datosarduino:$('#medicion_puertos').val()});
     }, false);
     /** Leer Socket 
     document.querySelector("#medicion_puertos").addEventListener("change", function(){
@@ -83,12 +84,12 @@ $(document).ready(function () {
         });
     }, false);**/
     socket.on("datosarduino", (data) => {
-        console.log(data);
+        //console.log("datosarduino",data);
         if(data.datosarduino == $('#medicion_puertos').val()){
             if(document.getElementById('btnconectado').value == data.boton){
                 document.getElementById('btnconectado').checked=true;
             }
-            if(document.getElementById('btndesconectado').value == data.boton){
+            /*if(document.getElementById('btndesconectado').value == data.boton){
                 document.getElementById('btndesconectado').checked=true;
                 document.getElementById('btnapagado').checked=true;
                 valor_humedad =0;
@@ -105,7 +106,22 @@ $(document).ready(function () {
                 document.getElementById('btnapagado').checked=true;
                 valor_humedad = 50;
                 setInterval(charts(valor_humedad), 1500);
+            }*/
+
+            /** Procesar los valores del Arduino **/
+            if(data.dato_prueba == "0,0" || data.dato_prueba == "0,100"|| data.dato_prueba == "100,0"){
+                document.getElementById('btnapagado').checked=true;
+                setInterval(charts(0, 0), 1500);
+            }else{
+                
+                document.getElementById('btnencendido').checked=true;
+                let datos_arduino = data.dato_prueba.split(",");;
+                for(let i=0; i< datos_arduino.length; i++){
+                    console.log("datosarduino",datos_arduino);
+                    setInterval(charts(datos_arduino[0], datos_arduino[1]), 1500);
+                }
             }
+
         }
         
     });
@@ -119,11 +135,14 @@ $(document).ready(function () {
         dateControl.value = currentDateTime;
     }
     setInterval(updateDateTime);
-    function charts(humedad){
-        $(".gauge-temperature").gaugeMeter({ percent: 20*100/50});
-        $(".value-temperature").html(20+" C°");    
+    function charts(temperatura,humedad){
+        $(".gauge-temperature").gaugeMeter({ percent: temperatura});//{ percent: temperatura*100/50}
+        $(".value-temperature").html(temperatura+" C°");    
         $(".gauge-humidity").gaugeMeter({ percent: humedad});
         $(".value-humidity").html(humedad+" %");
     }
-    setInterval(charts(valor_humedad), 1500);
+    setInterval(charts(valor_temperatura,valor_humedad), 1500);
+    
+    
+
 });

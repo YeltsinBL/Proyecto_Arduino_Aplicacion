@@ -1,6 +1,7 @@
 from app import app, socketio
 from flask import render_template, request, flash, redirect, url_for, session,  jsonify
-
+# Importaciones para trabajar con hilos - segundo plano
+from threading import Thread, Event
 # Importando conexión a BD
 from controllers.funciones_home import *
 import serial
@@ -77,6 +78,13 @@ def lista_puertos_disponibles():
     """Buscar las mediciones por sector en el Dashboard"""
     return jsonify(listar_puertos())
 
+#endregion
+
+#region Arduino Thread
+
+senal = Event()
+hilo = None
+#datos_recibidos:str
 serialobj:serial
 @socketio.event
 def acciones_arduino(datos):
@@ -91,26 +99,73 @@ def acciones_arduino(datos):
                 serialobj.close()
             serialobj.open()
             print('com3 is open', serialobj.isOpen())
+            #datos_recibidos= []
+            iniciar_hilo(datos)
         if datos['boton'] == 'on':
             serialobj.write(str(datos['valor']).encode())
-        if datos['boton'] == 'right':
+            #leer_datos(datos)
+        if datos['boton'] == 'off':
             serialobj.write(str(datos['valor']).encode())
-        if datos['boton'] == 'left':
-            serialobj.write(str(datos['valor']).encode())
+            #leer_datos(datos)
+        # if datos['boton'] == 'left':
+            # serialobj.write(str(datos['valor']).encode())
         if datos['boton'] == 'dis':
-            serialobj.write(str(datos['valor']).encode())
+            #serialobj.write(str(datos['valor']).encode())
             serialobj.close()
+            parar_hilo()
             print('com3 is open', serialobj.isOpen())
-        if serialobj.isOpen() and (datos['boton'] in {'on','right','left'}):
-            valor_sensor= int(serialobj.readline().decode('ascii'))
-            print("valor_sensor: ",valor_sensor)
-        datos['dato_sensor']=valor_sensor
-        print(datos)
-        socketio.emit('datosarduino', datos)
+            datos['dato_prueba']= '0,0'
+            socketio.emit('datosarduino', datos)
+        #if serialobj.isOpen() and (datos['boton'] in {'on','right','left'}):
+            #valor_sensor= int(serialobj.readline().decode('ascii'))
+            # print("valor_sensor: ",valor_sensor)
+            #iniciar_hilo(datos)
+        # datos['dato_sensor']=valor_sensor
+        # datos['dato_prueba']=datos_recibidos
+        # print(datos)
+        # socketio.emit('datosarduino', datos)
     except Exception:
-        print('No se llegó los datos')
+        print('acciones_arduino: No se llegó los datos')
     return redirect(url_for('view_form_medicion'))
 
+def iniciar_hilo(datos):
+    """Inicio del Thread"""
+    global hilo, senal
+    #if hilo is None:
+    senal.set() # habilitar las señales para segundo plano
+    hilo = Thread(target=leer_datos(datos))
+    hilo.daemon = True
+    hilo.start()
+    #if hilo is not None:
+    #    hilo = Thread(target=leer_datos(datos))
+def parar_hilo():
+    """Detener el Thread"""
+    global hilo, senal
+    if hilo is not None:
+        senal.clear()
+        hilo.join()
+        hilo = None
+def leer_datos(datos):
+    """Leer datos"""
+    try:
+        global senal, serialobj#, datos_recibidos
+        while(senal.is_set() and serialobj.is_open):
+            data = serialobj.readline().decode("utf-8").strip()
+
+            #print(len(data))
+            if len(data)>=1:
+                #datos_recibidos = data
+                #print(datos_recibidos)
+                datos['dato_prueba']=data
+                print(datos)
+                socketio.emit('datosarduino', datos)
+    except TypeError:
+        print('leer_datos: Error no llegó los datos')
+# def desconectar():
+#     """Desconectar Arduino"""
+#     global serialobj
+#     serialobj.close()
+#     parar_hilo()
 #endregion
 
 #region Usuario

@@ -147,41 +147,45 @@ def buscar_medicion_sector(valor, humedad=True):
             with conexion_sql.cursor() as cursor:
                 if humedad:
                     query = """
-                    select humedad_inicial,fecha_registro from (
-                        (SELECT idmediciones, humedad_inicial,
+                    declare @numero integer;
+					set @numero =0;
+                    select ROW_NUMBER() OVER(ORDER BY idmediciones ASC) AS _row,numero,humedad_inicial,fecha_registro from (
+                        (SELECT @numero+1 as numero,idmediciones, humedad_inicial,
                         FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                         FROM mediciones
-                        WHERE sector_id=%s) 
+                        WHERE sector_id=3) 
                         UNION ALL
-                        (SELECT 
+                        (SELECT @numero+1 as numero,
                            idmediciones,  humedad_final,
                         FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                         FROM mediciones
-                            WHERE sector_id=%s) 
-				    ) as consulta
-                    ORDER BY idmediciones asc;
+                            WHERE sector_id=3) 
+				    ) as consulta where humedad_inicial is not null
                     """
                 else:
                     query ="""
-                    select temperatura_inicial,fecha_registro from (
-                        (SELECT idmediciones, temperatura_inicial,
+                    declare @numero integer;
+					set @numero =0;
+                    select ROW_NUMBER() OVER(ORDER BY idmediciones ASC) AS _row,numero,temperatura_inicial,fecha_registro from (
+	
+                        (SELECT @numero+1 as numero,idmediciones, temperatura_inicial,
                             FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							    FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                             FROM mediciones
-                            WHERE sector_id=%s) 
+                            WHERE sector_id=3) 
                         UNION ALL
-                        (SELECT idmediciones,  temperatura_final,
+                        (SELECT  @numero+2 as numero,idmediciones,  temperatura_final,
                             FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							    FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                             FROM mediciones
-                            WHERE sector_id=%s)
-				    ) as consulta
-                    ORDER BY idmediciones asc;
+                            WHERE sector_id=3)
+				    ) as consulta where temperatura_inicial is not null
                     """
                 cursor.execute(query, (valor,valor))
                 resultado_busqueda = cursor.fetchall()
+                print(resultado_busqueda)
                 return resultado_busqueda
     except Exception as e:
         print(f"Ocurrió un error en def buscar_medicion_fechas: {e}")

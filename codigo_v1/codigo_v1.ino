@@ -4,7 +4,7 @@ Servo myservo;
 
 int pinservo=9;
 int angulo = 90;
-int carril=0;
+//int carril=0;
 
 /**botones*/
 int pulsador1=6;
@@ -27,6 +27,10 @@ int iniciar=0;
 const long interval = 2500; // tiempo a enviar
 unsigned long previousMillis = 0;  // Tiempo anterior 0
 
+/**PRUEBA**/
+double temperatura=0;
+double humedad=100;
+
 void setup() {
   Serial.begin(9600);
   inputString.reserve(200);
@@ -48,28 +52,28 @@ void loop() {
       //Serial.println("Apagado");
       digitalWrite(led1, LOW);
       digitalWrite(led2, LOW);
-      angulo = 90;
+      angulo = 0;
       myservo.write(angulo); 
     }
+    // if(inputString.substring(0,1)=="e"){
+    //   //Serial.println("Encendido");
+    //   //botones();
+    //   // digitalWrite(led2, HIGH);
+    //   // digitalWrite(led1, LOW);
+    //   angulo=0;
+    //   //inputString = "i";      
+    //   myservo.write(angulo); 
+    //   // if (millis() - previousMillis >= interval) {
+    //   //   Serial.println("Entro E");
+    //   //   previousMillis = millis();
+    //   //   sensorHumerdad();
+    //   // }
+    // }
     if(inputString.substring(0,1)=="e"){
-      //Serial.println("Encendido");
-      //botones();
-      // digitalWrite(led2, HIGH);
-      // digitalWrite(led1, LOW);
-      angulo=0;
-      inputString = "i";      
-      myservo.write(angulo); 
-      // if (millis() - previousMillis >= interval) {
-      //   Serial.println("Entro E");
-      //   previousMillis = millis();
-      //   sensorHumerdad();
-      // }
-    }
-    if(inputString.substring(0,1)=="i"){
       digitalWrite(led2, HIGH);
       digitalWrite(led1, LOW);
-      angulo=0;
-      carril=0;
+      angulo=180;
+      //carril=0;
       myservo.write(angulo); 
       if (millis() - previousMillis >= interval) {
         //Serial.println("Entro I");
@@ -79,37 +83,53 @@ void loop() {
       //botones();
     }
     if(inputString.substring(0,1)=="d"){
-      digitalWrite(led1, HIGH);
-      digitalWrite(led2, LOW);
-      angulo=180;
-      carril=1;
-      myservo.write(angulo); 
-      if (millis() - previousMillis >= interval) { 
-        //Serial.println("Entro D");
-        previousMillis = millis();   
-        sensorHumerdad();
-      }
+      //digitalWrite(led1, LOW);
+      //digitalWrite(led2, LOW);
+      //temperatura = 0;
+      //humedad = 0;
+      angulo=0;
+      //carril=1;
+      // myservo.write(angulo); 
+      // if (millis() - previousMillis >= interval) { 
+      //   //Serial.println("Entro D");
+      //   previousMillis = millis();   
+      //   sensorHumerdad();
+      // }
       //botones();
     }
     
-      botones();
+      //botones();
   //}
   //delay (1000) ;
 }
 void sensorHumerdad(){
-  soilMoistureValue = analogRead (A0);
-  soilmoisturepercent = map (soilMoistureValue, Airvalue, WaterValue, 0, 100);
-   if (soilmoisturepercent >= 100){
-   Serial.println("100");
+  // soilMoistureValue = analogRead (A0);
+  // soilmoisturepercent = map (soilMoistureValue, Airvalue, WaterValue, 0, 100);
+  //  if (soilmoisturepercent >= 100){
+  //  Serial.println("100");
 
-   }
-   else if (soilmoisturepercent <=0){
-   Serial.println("0");
-   }
-   else if (soilmoisturepercent >0 && soilmoisturepercent < 100){
-   Serial.println(soilmoisturepercent);
+  //  }
+  //  else if (soilmoisturepercent <=0){
+  //  Serial.println("0");
+  //  }
+  //  else if (soilmoisturepercent >0 && soilmoisturepercent < 100){
+  //  Serial.println(soilmoisturepercent);
+  // }
+  // //delay (1000) ;
+  temperatura= temperatura + 0.5;
+  if(temperatura>100){
+    temperatura=0;
   }
-  //delay (1000) ;
+  humedad= humedad - 0.5;
+  if(humedad==0){
+    humedad=100;
+  }
+  Serial.println(String(temperatura) +","+ String(humedad));
+  //Serial.println("Temperatura:"+String(temperatura) +"," +"Humedad:"+ String(humedad));
+  //Serial.println(temperatura+(0.01*humedad));
+  Serial.print(temperatura);
+  Serial.print(',');
+  Serial.println(humedad);
 }
 void botones(){
   estado_pulsador1=digitalRead(pulsador1);
@@ -117,7 +137,7 @@ void botones(){
   if(estado_pulsador1==HIGH){
     Serial.println("d");
     angulo=180;
-    carril=1;
+    //carril=1;
     digitalWrite(led1, HIGH);
     digitalWrite(led2, LOW);
     inputString = "d";
@@ -131,7 +151,7 @@ void botones(){
   if(estado_pulsador2==HIGH){
     Serial.println("i");
     angulo=0;
-    carril=0;
+    //carril=0;
     digitalWrite(led2, HIGH);
     digitalWrite(led1, LOW);
     inputString = "i";
@@ -144,15 +164,15 @@ void botones(){
   }
   // else
   // if(carril==0){
-  //   digitalWrite(led2, HIGH);
-  //   digitalWrite(led1, LOW);
+  //   //digitalWrite(led2, HIGH);
+  //   //digitalWrite(led1, LOW);
   //   angulo=0;
   //   inputString = "i";
   // }
   // else{
-  //   digitalWrite(led1, HIGH);
-  //   digitalWrite(led2, LOW);
-  //   //angulo=180;
+  //   //digitalWrite(led1, HIGH);
+  //   //digitalWrite(led2, LOW);
+  //   angulo=180;
   //   //Serial.println("Derecha");
   // }
   // myservo.write(angulo); 
