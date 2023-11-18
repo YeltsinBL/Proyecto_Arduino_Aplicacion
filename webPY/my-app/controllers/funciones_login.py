@@ -22,7 +22,7 @@ def recibeInsertRegisterUser(name_surname, email_user, pass_user):
             with connectionBD() as conexion_sql:
                 with conexion_sql.cursor() as mycursor:
                     sql = "INSERT INTO usuarios(name_surname, email_user, pass_user)\
-                    VALUES (%s, %s, %s)"
+                    VALUES (?, ?, ?)"
                     valores = (name_surname, email_user, nueva_password)
                     mycursor.execute(sql, valores)
                     conexion_sql.commit()
@@ -39,7 +39,7 @@ def validar_data_register_login(name_surname, email_user, pass_user):
     try:
         with connectionBD() as conexion_sql:
             with conexion_sql.cursor() as cursor:
-                query = "SELECT * FROM usuarios WHERE email_user = %s"
+                query = "SELECT * FROM usuarios WHERE email_user = ?"
                 cursor.execute(query, (email_user,))
                 user = cursor.fetchone()  # Obtener la primera fila de resultados
                 if user is not None:
@@ -62,7 +62,7 @@ def info_perfil_session():
     try:
         with connectionBD() as conexion_sql:
             with conexion_sql.cursor() as cursor:
-                query = "SELECT name_surname, email_user FROM usuarios WHERE id = %s"
+                query = "SELECT name_surname, email_user FROM usuarios WHERE id = ?"
                 cursor.execute(query, (session['id']))
                 info_perfil = cursor.fetchall()
         return info_perfil
@@ -84,11 +84,11 @@ def procesar_update_perfil(data_form):
 
     with connectionBD() as conexion_sql:
         with conexion_sql.cursor() as cursor:
-            query = """SELECT * FROM usuarios WHERE email_user = %s """
+            query = """SELECT * FROM usuarios WHERE email_user = ? """
             cursor.execute(query, (email_user))
             account = cursor.fetchone()
             if account:
-                if check_password_hash(account['pass_user'], pass_actual):
+                if check_password_hash(account[3], pass_actual):
                     # Verificar si new_pass_user y repetir_pass_user están vacías
                     if not new_pass_user or not repetir_pass_user:
                         return update_pefil_sin_pass(id_user, name_surname)
@@ -101,8 +101,8 @@ def procesar_update_perfil(data_form):
                             with conexion_sql.cursor() as cursor:
                                 query = """
                                     UPDATE usuarios
-                                    SET name_surname = %s, pass_user = %s
-                                    WHERE id = %s
+                                    SET name_surname = ?, pass_user = ?
+                                    WHERE id = ?
                                 """
                                 params = (name_surname, nueva_password, id_user)
                                 cursor.execute(query, params)
@@ -122,8 +122,8 @@ def update_pefil_sin_pass(id_user, name_surname):
             with conexion_sql.cursor() as cursor:
                 query = """
                     UPDATE usuarios
-                    SET name_surname = %s
-                    WHERE id = %s
+                    SET name_surname = ?
+                    WHERE id = ?
                 """
                 params = (name_surname, id_user)
                 cursor.execute(query, params)
