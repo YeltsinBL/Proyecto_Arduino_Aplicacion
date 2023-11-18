@@ -154,14 +154,14 @@ def buscar_medicion_sector(valor, humedad=True):
                         FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                         FROM mediciones
-                        WHERE sector_id=3) 
+                        WHERE sector_id=%s) 
                         UNION ALL
-                        (SELECT @numero+1 as numero,
+                        (SELECT @numero+2 as numero,
                            idmediciones,  humedad_final,
                         FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                         FROM mediciones
-                            WHERE sector_id=3) 
+                            WHERE sector_id=%s) 
 				    ) as consulta where humedad_inicial is not null
                     """
                 else:
@@ -174,13 +174,13 @@ def buscar_medicion_sector(valor, humedad=True):
                             FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							    FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                             FROM mediciones
-                            WHERE sector_id=3) 
+                            WHERE sector_id=%s) 
                         UNION ALL
                         (SELECT  @numero+2 as numero,idmediciones,  temperatura_final,
                             FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							    FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                             FROM mediciones
-                            WHERE sector_id=3)
+                            WHERE sector_id=%s)
 				    ) as consulta where temperatura_inicial is not null
                     """
                 cursor.execute(query, (valor,valor))
