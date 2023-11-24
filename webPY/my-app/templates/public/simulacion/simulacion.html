@@ -1,0 +1,148 @@
+{% extends 'public/base_cpanel.html' %}
+<!--Cambiando el title-->
+{% block title %}INVERNADERO  AUTOMOTIZADO 🌹| Simulación 📈{% endblock %}
+<!--Inicio del block-->
+{% block customCSS %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename ='assets/css/simulacion.css') }}" />
+<link rel="stylesheet"
+  href="{{ url_for('static', filename ='assets/css/bootstrap-grid.min.css') }}" />
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename ='assets/css/style.css') }}" />
+{% endblock %}
+{% block body %}
+<div class="card" style="border-radius: 0px !important">
+    <div class="row justify-content-center mb-2">
+      <div class="col-md-12">
+        <h3 class="text-center mt-5 mb-3">SIMULACIÓN DE INVERNADERO</h3>
+        <hr />
+      </div>
+    </div>
+
+    <div class="row justify-content-center mb-2">
+        <div class="col-md-10">
+            <div >
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="medicion_puertos" class="form-label">
+                      Puertos
+                    </label>
+                    <select
+                      class="form-select"
+                      id="medicion_puertos"
+                      name="medicion_puertos">
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label for="medicion_estado" class="form-label">
+                      Estado
+                    </label>
+                    <br>
+                    <div class=" btn-group" role="group" aria-label="Basic radio toggle button group">
+                      <input type="radio" class="btn-check" name="btnradio" id="btnconectado" autocomplete="off" value="conn">
+                      <label class="btn btn-outline-primary" for="btnconectado">Conectado</label>              
+                      <input type="radio" class="btn-check" name="btnradio" id="btndesconectado" autocomplete="off" value="dis" checked>
+                      <label class="btn btn-outline-primary" for="btndesconectado">Desconectado</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-md-6">
+                    <label for="medicion_inicio" class="form-label">
+                      Tomar Medidas
+                    </label>
+                    <br>
+                    <div class=" btn-group" role="group" aria-label="Basic radio toggle button group 2">
+                      <input type="radio" class="btn-check" name="btnradiotwo" id="btnencendido" autocomplete="on" value="on">
+                      <label class="btn btn-outline-primary" for="btnencendido">Si</label>              
+                      <input type="radio" class="btn-check" name="btnradiotwo" id="btnapagado" autocomplete="off" value="off" checked>
+                      <label class="btn btn-outline-primary" for="btnapagado">No</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6"></div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="card_medicion">
+                            <h3>Agua</h3>
+                            <div class="card-content">
+                                <div class="bottle">
+                                    <div class="water" id="water"></div>
+                                </div>
+                            </div>                     
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card_medicion">
+                            <h3>Foco</h3>
+                            <div class="card-content">
+                                <div class="lamp" id="lamp">
+                                    <div class="bulb"></div>
+                                    <div class="base"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="card_medicion">
+                            <h3>Ventilador</h3>
+                            <div class="card-content">
+                                <div class="fan2" id="fan2">
+                                    <div class="ceiling-fan1 blade2"></div>
+                                    <div class="ceiling-fan2 blade2"></div>
+                                    <div class="ceiling-fan3 blade2"></div>
+                                    <div class="ceiling-fan4 blade2"></div>        
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- <div class="card_medicion">
+                            <h3>Puerta</h3>
+                            <div class="door-container">
+                                <div class="door" id="door"></div>
+                            </div>
+                            <button onclick="toggleDoor()">Abrir / Cerrar</button>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="card_medicion">
+                            <h3>Temperatura</h3>
+                            <div class="card-content">
+                                <div class="temperature-meter">
+                                    <div class="indicator" id="indicator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card_medicion">
+                            <h3>Humedad</h3>
+                            <div class="card-content">
+                                <div class="humidity-meter">
+                                    <div class="indicator_two" id="indicator_two"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block customJS %}
+<script src="{{ url_for('static', filename ='assets/customJS/simulacion.js') }}"type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+
+{% endblock %}

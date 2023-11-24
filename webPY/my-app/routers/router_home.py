@@ -8,6 +8,13 @@ import serial
 PATH_URL = "public/mediciones"
 
 # region Medición
+@app.route('/simulacion-medicion', methods=['GET'])
+def view_simulacion_medicion():
+    """Mostrar el formulario de simulacion de medición"""
+    if 'conectado' in session:
+        return render_template(f'public/simulacion/simulacion.html')
+    flash('primero debes iniciar sesión.', 'error')
+    return redirect(url_for('inicio'))
 @app.route('/registrar-medicion', methods=['GET'])
 def view_form_medicion():
     """Mostrar el formulario de medición"""
@@ -114,7 +121,7 @@ def acciones_arduino(datos):
             serialobj.close()
             parar_hilo()
             print('com3 is open', serialobj.isOpen())
-            datos['dato_prueba']= '0,0'
+            datos['dato_prueba']= '0,0,0'
             socketio.emit('datosarduino', datos)
         #if serialobj.isOpen() and (datos['boton'] in {'on','right','left'}):
             #valor_sensor= int(serialobj.readline().decode('ascii'))
@@ -157,7 +164,7 @@ def leer_datos(datos):
                 #datos_recibidos = data
                 #print(datos_recibidos)
                 datos['dato_prueba']=data
-                print(datos)
+                print("Arduino ",datos)
                 socketio.emit('datosarduino', datos)
     except TypeError:
         print('leer_datos: Error no llegó los datos')
