@@ -30,18 +30,11 @@ $(document).ready(function () {
           console.error(error);
       }
   }
-  //var cant=0;
-  var valor_temperatura=0;
-  var valor_humedad=0;
-  var valor_agua=0;
-
   
 // Botella de agua
-let waterLevel = 0;
 let waterElement = document.getElementById('water');
-
 function fillBottle(value) {
-  //waterLevel += 20; // Incrementa el nivel de agua
+  $(".value-agua").html(value+" L"); 
   if (value <= 160) {
     waterElement.style.height = `${value}px`; // Cambia la altura del agua
   } else {
@@ -49,15 +42,9 @@ function fillBottle(value) {
   }
 }
 
-// Llamada a la función para simular el llenado de agua
-// Puedes ejecutar esta función cuando desees simular el llenado, por ejemplo, al hacer clic en un botón
-//fillBottle();
-
 // Puerta
-// let isOpen = false;
 // const doorElement = document.querySelector('.door');
-// function toggleDoor() {
-//   isOpen = !isOpen;
+// function toggleDoor(isOpen) {
 //   if (isOpen) {
 //     doorElement.classList.add("open");
 //   } else {
@@ -67,50 +54,56 @@ function fillBottle(value) {
 // toggleDoor();
 
 //Ventilador
-let isFanOn = false;
 let bladesElement = document.getElementById('fan2');
 function toggleFan(isFanOn) {
-  //isFanOn = !isFanOn;
   if (isFanOn) {
     bladesElement.style.animationPlayState = 'running';
   } else {
     bladesElement.style.animationPlayState = 'paused';
   }
 }
-//toggleFan();
 
 // Foco
-let isLightOn = false;
 let lampElement = document.getElementById('lamp');
-
 function toggleLight(isLightOn) {
-  //isLightOn = !isLightOn;
   if (isLightOn) {
     lampElement.classList.add('light-on');
   } else {
     lampElement.classList.remove('light-on');
   }
 }
-//toggleLight();
 
-// Medición
-// Obtener el elemento indicador
+// Temperatura
 const indicator = document.getElementById('indicator');
-// Función para actualizar la posición del indicador basado en una escala de frío a calor (0 a 100)
 function setTemperature(value) {
+  $(".value-temperatura").html(value+" C°");
   const percentage = value + '%';
   indicator.style.left = percentage;
 }
-// Ejemplo: cambiar la medición de frío a calor (0 a 100)
-//setTemperature(75); // Cambiar este valor para ajustar la posición del indicador
 
 // Humedad
-// Obtener el elemento indicador
 const indicator_two = document.getElementById('indicator_two');
-
-// Función para establecer la humedad (0 a 100)
 function setHumidity(value) {
+  $(".value-humedad").html(value+" C°");
   indicator_two.style.left = value + '%';
+}
+
+// Pasar Agua
+const indicator_three = document.getElementById('indicator_three');
+const water_two = document.getElementById('water_two');
+const cuadrado = document.getElementById('cuadrado');
+function setPaseagua(value) {
+  if(value){
+    water_two.style.width = '100%';
+    indicator_three.style.left = '100%';
+    indicator_three.visibility='hidden';
+    cuadrado.style.visibility='hidden';
+  }else{
+    water_two.style.width = '50%';
+    indicator_three.style.left = '50%';
+    indicator_three.visibility='visible';
+    cuadrado.style.visibility='visible';
+  }
 }
 
   var socket = io();
@@ -125,6 +118,7 @@ function setHumidity(value) {
       document.getElementById('btnapagado').checked=true;
       toggleLight(false);
       toggleFan(false);
+      setPaseagua(false);
       setHumidity(0);
       setTemperature(0);
       fillBottle(0);
@@ -165,6 +159,7 @@ function setHumidity(value) {
                   toggleFan(false);
                 }
                 setTemperature(datos_arduino[0]);
+                setPaseagua((datos_arduino[1]>35)? false:true);
                 setHumidity(datos_arduino[1]);
                 fillBottle(datos_arduino[2]);
             }
