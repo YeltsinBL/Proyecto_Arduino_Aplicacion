@@ -110,7 +110,7 @@ function setPaseagua(value) {
   /** Sector Botones Emitir Socket**/
   document.querySelector("#btnconectado").addEventListener("change", function(){
       btnconectado = document.getElementById('btnconectado').value;
-      socket.emit('acciones_arduino', {boton:btnconectado,valor: $('#medicion_puertos').val(), datosarduino:$('#medicion_puertos').val()});
+      socket.emit('acciones_arduino', {boton:btnconectado,valor: $('#medicion_puertos').val(), datosarduino:$('#medicion_puertos').val(), js:'simulacion'});
   }, false);
   document.querySelector("#btndesconectado").addEventListener("change", function(){
       btndesconectado = document.getElementById('btndesconectado').value;
@@ -141,28 +141,29 @@ function setPaseagua(value) {
         /** Procesar los valores del Arduino **/
         if(data.dato_prueba == "0,0,0" || data.dato_prueba == "0,100,0"|| data.dato_prueba == "100,0,0"){
             document.getElementById('btnapagado').checked=true;
-        }else{            
-            document.getElementById('btnencendido').checked=true;
-            let datos_arduino = data.dato_prueba.split(",");;
-            for(let i=0; i< datos_arduino.length; i++){
-                console.log("datosarduino",datos_arduino);
-                if(datos_arduino[0] >=29){
-                  toggleLight(false);
-                  toggleFan(true);
-                }
-                if(datos_arduino[0] <24.5){
-                  toggleLight(true);
-                  toggleFan(false);
-                }
-                if(datos_arduino[0] >24.5 && datos_arduino[0] <29){
-                  toggleLight(false);
-                  toggleFan(false);
-                }
-                setTemperature(datos_arduino[0]);
-                setPaseagua((datos_arduino[1]>35)? false:true);
-                setHumidity(datos_arduino[1]);
-                fillBottle(datos_arduino[2]);
-            }
+        }else{
+          document.getElementById('btnconectado').checked=true;
+          document.getElementById('btnencendido').checked=true;
+          let datos_arduino = data.dato_prueba.split(",");;
+          for(let i=0; i< datos_arduino.length; i++){
+              console.log("datosarduino",datos_arduino);
+              if(datos_arduino[0] >=29){
+                toggleLight(false);
+                toggleFan(true);
+              }
+              if(datos_arduino[0] <24.5){
+                toggleLight(true);
+                toggleFan(false);
+              }
+              if(datos_arduino[0] >24.5 && datos_arduino[0] <29){
+                toggleLight(false);
+                toggleFan(false);
+              }
+              setTemperature(datos_arduino[0]);
+              setPaseagua((datos_arduino[1]>35)? false:true);
+              setHumidity(datos_arduino[1]);
+              fillBottle(datos_arduino[2]);
+          }
         }
     }
   });

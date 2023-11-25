@@ -9,7 +9,7 @@
   
 .water {
     width: 130px;
-    height: 160px;
+    height: 0px;
     background-color: #3498db;
     position: absolute;
     bottom: 5px;

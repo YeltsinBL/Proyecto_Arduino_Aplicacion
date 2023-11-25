@@ -37,7 +37,7 @@ $(document).ready(function () {
     /** Sector Botones Emitir Socket**/
     document.querySelector("#btnconectado").addEventListener("change", function(){
         btnconectado = document.getElementById('btnconectado').value;
-        socket.emit('acciones_arduino', {boton:btnconectado,valor: $('#medicion_puertos').val(), datosarduino:$('#medicion_puertos').val()});
+        socket.emit('acciones_arduino', {boton:btnconectado,valor: $('#medicion_puertos').val(), datosarduino:$('#medicion_puertos').val(), js:'form_medicion'});
     }, false);
     document.querySelector("#btndesconectado").addEventListener("change", function(){
         //cant =0;
@@ -109,11 +109,11 @@ $(document).ready(function () {
             }*/
 
             /** Procesar los valores del Arduino **/
-            if(data.dato_prueba == "0,0" || data.dato_prueba == "0,100"|| data.dato_prueba == "100,0"){
+            if(data.dato_prueba == "0,0,0" || data.dato_prueba == "0,100,0"|| data.dato_prueba == "100,0,0"){
                 document.getElementById('btnapagado').checked=true;
                 setInterval(charts(0, 0), 1500);
             }else{
-                
+                document.getElementById('btnconectado').checked=true;
                 document.getElementById('btnencendido').checked=true;
                 let datos_arduino = data.dato_prueba.split(",");;
                 for(let i=0; i< datos_arduino.length; i++){
