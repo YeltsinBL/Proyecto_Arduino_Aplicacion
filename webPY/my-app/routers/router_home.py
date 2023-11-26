@@ -8,6 +8,13 @@ import serial
 PATH_URL = "public/mediciones"
 
 # region Medición
+@app.route('/simulacion-medicion', methods=['GET'])
+def view_simulacion_medicion():
+    """Mostrar el formulario de simulacion de medición"""
+    if 'conectado' in session:
+        return render_template(f'public/simulacion/simulacion.html')
+    flash('primero debes iniciar sesión.', 'error')
+    return redirect(url_for('inicio'))
 @app.route('/registrar-medicion', methods=['GET'])
 def view_form_medicion():
     """Mostrar el formulario de medición"""
@@ -100,21 +107,27 @@ def acciones_arduino(datos):
             serialobj.open()
             print('com3 is open', serialobj.isOpen())
             #datos_recibidos= []
-            iniciar_hilo(datos)
         if datos['boton'] == 'on':
+            if not serialobj.isOpen():
+                serialobj.open()
             serialobj.write(str(datos['valor']).encode())
             #leer_datos(datos)
+            iniciar_hilo(datos)
         if datos['boton'] == 'off':
-            serialobj.write(str(datos['valor']).encode())
+            #serialobj.write(str(datos['valor']).encode())
+            parar_hilo()
+            serialobj.close()
             #leer_datos(datos)
         # if datos['boton'] == 'left':
             # serialobj.write(str(datos['valor']).encode())
         if datos['boton'] == 'dis':
             #serialobj.write(str(datos['valor']).encode())
-            serialobj.close()
-            parar_hilo()
+            if serialobj.isOpen():
+                serialobj.close()
+            if hilo is not None:
+                parar_hilo()
             print('com3 is open', serialobj.isOpen())
-            datos['dato_prueba']= '0,0'
+            datos['dato_prueba']= '0,0,0'
             socketio.emit('datosarduino', datos)
         #if serialobj.isOpen() and (datos['boton'] in {'on','right','left'}):
             #valor_sensor= int(serialobj.readline().decode('ascii'))
@@ -131,11 +144,15 @@ def acciones_arduino(datos):
 def iniciar_hilo(datos):
     """Inicio del Thread"""
     global hilo, senal
-    #if hilo is None:
-    senal.set() # habilitar las señales para segundo plano
-    hilo = Thread(target=leer_datos(datos))
-    hilo.daemon = True
-    hilo.start()
+    trabajos =  []
+    if hilo is None:
+        senal.set() # habilitar las señales para segundo plano
+        hilo = Thread(target=leer_datos(datos))
+        hilo.daemon = True
+        #hilo.setDaemon(True)
+        trabajos.append(hilo)
+        print("Hilo ", trabajos)
+        hilo.start()
     #if hilo is not None:
     #    hilo = Thread(target=leer_datos(datos))
 def parar_hilo():
@@ -157,7 +174,7 @@ def leer_datos(datos):
                 #datos_recibidos = data
                 #print(datos_recibidos)
                 datos['dato_prueba']=data
-                print(datos)
+                print("Arduino ",datos)
                 socketio.emit('datosarduino', datos)
     except TypeError:
         print('leer_datos: Error no llegó los datos')

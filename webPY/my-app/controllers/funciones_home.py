@@ -20,7 +20,7 @@ def procesar_form_medicion(data_form):
 
                 sql = "INSERT INTO mediciones (humedad_inicial, humedad_final, temperatura_inicial,\
                     temperatura_final, fecha_registro, sector_id)\
-                    VALUES (%s, %s, %s, %s, %s, %s)"
+                    VALUES (?, ?, ?, ?, ?, ?)"
                 first = data_form['medicion_fecha'].replace(",", "")
                 second =datetime.datetime.strptime(first, '%d/%m/%Y %H:%M:%S')
                 # Creando una tupla con los valores del INSERT
@@ -71,7 +71,12 @@ def medicion_reporte():
                     ORDER BY m.fecha_registro desc
                     """
                 cursor.execute(query)
-                mediciones = cursor.fetchall()
+                #mediciones = cursor.fetchall()
+                columns = [column[0] for column in cursor.description]
+                print(columns)
+                mediciones = []
+                for row in cursor.fetchall():
+                    mediciones.append(dict(zip(columns, row)))
         return mediciones
     except Exception as e:
         print(
@@ -127,9 +132,9 @@ def buscar_medicion_fechas(fecha_desde, fecha_hasta):
                         s.Sector_Nombre AS medicion_sector
                     FROM mediciones m 
 					inner join Sector s on m.sector_id = s.idSector
-                    WHERE (%s = '' and %s='') or 
-                          (CAST(fecha_registro AS date) >= convert(date, %s, 103) and
-                          CAST(fecha_registro AS date) <= convert(date, %s, 103))
+                    WHERE (? = '' and ?='') or 
+                          (CAST(fecha_registro AS date) >= convert(date, ?, 103) and
+                          CAST(fecha_registro AS date) <= convert(date, ?, 103))
                     ORDER BY m.fecha_registro desc;
                     """
                 search_pattern =(fecha_desde, fecha_hasta,fecha_desde, fecha_hasta)
@@ -154,14 +159,14 @@ def buscar_medicion_sector(valor, humedad=True):
                         FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                         FROM mediciones
-                        WHERE sector_id=%s) 
+                        WHERE sector_id=?) 
                         UNION ALL
                         (SELECT @numero+2 as numero,
                            idmediciones,  humedad_final,
                         FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                         FROM mediciones
-                            WHERE sector_id=%s) 
+                            WHERE sector_id=?)
 				    ) as consulta where humedad_inicial is not null
                     """
                 else:
@@ -174,13 +179,13 @@ def buscar_medicion_sector(valor, humedad=True):
                             FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							    FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                             FROM mediciones
-                            WHERE sector_id=%s) 
+                            WHERE sector_id=?)
                         UNION ALL
                         (SELECT  @numero+2 as numero,idmediciones,  temperatura_final,
                             FORMAT( fecha_registro, 'dd/MM/yyyy', 'en-US' ) +' '+
 							    FORMAT(fecha_registro, N'hh:mm tt') AS fecha_registro
                             FROM mediciones
-                            WHERE sector_id=%s)
+                            WHERE sector_id=?)
 				    ) as consulta where temperatura_inicial is not null
                     """
                 cursor.execute(query, (valor,valor))
@@ -237,7 +242,7 @@ def eliminarUsuario(id):
     try:
         with connectionBD() as conexion_sql:
             with conexion_sql.cursor() as cursor:
-                query_sql = "DELETE FROM usuarios WHERE id=%s"
+                query_sql = "DELETE FROM usuarios WHERE id=?"
                 cursor.execute(query_sql, (id,))
                 conexion_sql.commit()
                 resultado_eliminar = cursor.rowcount

@@ -104,17 +104,23 @@ def loginCliente():
         conexion_sql = connectionBD()
         cursor = conexion_sql.cursor()
         cursor.execute(
-            """SELECT * FROM usuarios WHERE email_user = %s""", (email_user))
-        account = cursor.fetchone()
-        if account:
-            if check_password_hash(account['pass_user'], pass_user):
-                # Crear datos de sesión, para poder acceder a estos datos en otras rutas
-                session['conectado'] = True
-                session['id'] = account['id']
-                session['name_surname'] = account['name_surname']
-                session['email_user'] = account['email_user']
-                flash('la sesión fue correcta.', 'success')
-                return redirect(url_for('inicio'))
+             """SELECT * FROM usuarios WHERE email_user = ?""", (email_user))
+        #account = cursor.fetchone()
+        columns = [column[0] for column in cursor.description]
+        print(columns)
+        results = []
+        for row in cursor.fetchall():
+            results.append(dict(zip(columns, row)))
+        if results:
+            for account in results:
+                if check_password_hash(account['pass_user'], pass_user):
+                    # Crear datos de sesión, para poder acceder a estos datos en otras rutas
+                    session['conectado'] = True
+                    session['id'] = account['id']
+                    session['name_surname'] = account['name_surname']
+                    session['email_user'] = account['email_user']
+                    flash('la sesión fue correcta.', 'success')
+                    return redirect(url_for('inicio'))
             # La cuenta no existe o el nombre de usuario/contraseña es incorrecto
             flash('datos incorrectos por favor revise.', 'error')
             return render_template(f'{PATH_URL_LOGIN}/base_login.html')

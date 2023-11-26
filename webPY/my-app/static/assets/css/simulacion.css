@@ -1,0 +1,233 @@
+   /* Botalla de agua */
+ .bottle {
+    width: 150px;
+    height: 200px;
+    border: 5px solid #000;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+.water {
+    width: 130px;
+    height: 0px;
+    background-color: #3498db;
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    border-radius: 5px;
+    transition: height 0.5s ease;
+  } 
+.color{
+  color: #000;
+  text-align: center;
+  position: relative;
+  
+}
+
+  /* Foco */
+  .lamp {
+    width: 100px;
+    height: 200px;
+    position: relative;
+  }
+  
+  .bulb {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, #fff 0%, #f7d26e 50%, #f7d26e 100%); 
+    /* background: radial-gradient(circle at 50% 50%, #fff 0%, #f3e4b6 50%, #f3e4b6 100%);*/
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .base {
+    width: 40px;
+    height: 20px;
+    background-color: #aaa;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px 5px 0 0;
+  }
+  
+  .light-on {
+    background: radial-gradient(circle at 50% 50%, #fff 0%, #f7d26e 30%, #ffcc00 70%);
+  }
+
+  /* Puerta */
+  .door-container {
+    width: 200px;
+    height: 300px;
+    position: relative;
+    perspective: 1000px;
+    background-color: aqua;
+  }
+  
+  .door {
+    width: 100%;
+    height: 100%;
+    background-color: brown;
+    position: absolute;
+    transform-origin: left center;
+    transition: transform 1s ease;
+  }
+  
+  .open {
+    transform: rotateY(-90deg);
+  }
+
+    /* Ventilador  */
+    
+    .fan2 {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        position: relative;
+        background-color: #000;
+        animation: spin 1.5s linear infinite paused;
+    }
+    .fan2::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        border: 10px solid #777;
+        background-image: radial-gradient(#fff,#bbb);
+    }
+    .blade2 {
+        position: absolute;
+        background-image: linear-gradient(315deg, #fff 0%, #bbb 74%);
+        height: 150px;
+        width: 50px;
+    }
+    .ceiling-fan1 {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 50% 50% 10% 50% / 85% 85% 15% 15%;
+    }
+    .ceiling-fan2 {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 10% 50% 50% 50% / 15% 15% 85% 85%;
+    }
+    .ceiling-fan3 {
+        top: 50%;
+        right: 0;
+        transform: translate(-100%,-50%) rotate(90deg);
+        border-radius: 10% 50% 50% 50% / 15% 15% 85% 85%;
+    }
+    .ceiling-fan4 {
+        top: 50%;
+        left: 0;
+        transform: translate(100%,-50%) rotate(-90deg);
+        border-radius: 10% 50% 50% 50% / 15% 15% 85% 85%;
+    }
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+      
+      /* Medición */
+
+      .temperature-meter {
+        width: 300px;
+        height: 30px;
+        background: linear-gradient(to right, #3498db 0%, #f1c40f 50%, #e74c3c 100%);
+        border-radius: 5px;
+        margin: 20px;
+        position: relative;
+      }
+      
+      .indicator {
+        width: 10px;
+        height: 100%;
+        background-color: #f0f0f0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 5px;
+        transition: left 0.5s ease;
+      }
+      
+      /* Humedad */
+      .humidity-meter {
+        width: 300px;
+        height: 30px;
+        background: linear-gradient(to right, rgb(117,203,190) 0%, rgb(56,157,173) 50%, rgb(56,70,114) 100%);
+        border-radius: 5px;
+        margin: 20px;
+        position: relative;
+      }
+      
+      .indicator_two {
+        width: 10px;
+        height: 100%;
+        background-color: #f0f0f0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 5px;
+        transition: left 0.5s ease;
+      }
+
+      /* Pasar Agua */
+      .pipe{
+        position: relative;
+        width: 300px;
+        height: 100px;
+        margin: 20px;
+        background-color: #4895ef;
+        overflow: hidden;
+        border-top: 5px solid #000;
+        border-bottom: 5px solid #000;
+      }
+      .indicator_three {
+        width: 10px;
+        height: 100%;
+        background-color: #423e3e;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        border-radius: 5px;
+        transition: left 0.5s ease;
+        z-index: 1;
+        visibility: visible;
+      }
+      .water_two{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background-image: url(../img/wave.png);
+        background-size: 500px 100px;
+        animation: wave 5s linear infinite;
+      }
+      @keyframes wave {
+        0%{
+          background-position-x: 0;
+        }
+        100%{
+          background-position-x: 1000px;
+        }        
+      }
+      .cuadrado {
+        width: 50%;
+        height: 100%;
+        background-color: rgb(255, 255, 255);
+        position: relative;
+        float: right;
+        visibility: visible;
+      }

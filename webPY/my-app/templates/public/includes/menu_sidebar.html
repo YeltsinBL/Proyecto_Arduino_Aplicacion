@@ -18,6 +18,13 @@
   <div class="menu-inner-shadow"></div>
   <ul class="menu-inner py-5">
     <li
+      class="menu-item {% if request.path == '/simulacion-medicion' %} active {% endif %}">
+      <a href="/simulacion-medicion" class="menu-link">
+        <i class="menu-icon bi bi-flower3"></i> 
+        <div data-i18n="Basic">Simulación de Invernadero</div>
+      </a>
+    </li>
+    <li
       class="menu-item {% if request.path == '/registrar-medicion' %} active {% endif %}">
       <a href="/registrar-medicion" class="menu-link">
         <i class="menu-icon bi bi-activity"></i> 
