@@ -101,7 +101,7 @@ def acciones_arduino(datos):
     global serialobj
     try:
         if datos['boton'] == 'conn':
-            serialobj = serial.Serial(datos['valor'],9600)
+            serialobj = serial.Serial(datos['valor'],115200)
             if serialobj.isOpen():
                 serialobj.close()
             serialobj.open()
