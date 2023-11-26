@@ -101,11 +101,12 @@ def acciones_arduino(datos):
     global serialobj
     try:
         if datos['boton'] == 'conn':
-            serialobj = serial.Serial(datos['valor'],9600)
+            print('Puerto: ','/dev/'+datos['valor'] if 'cu.usb'in datos['valor'] else datos['valor'])
+            serialobj = serial.Serial('/dev/'+datos['valor'] if 'cu.usb'in datos['valor'] else datos['valor'],9600)
             if serialobj.isOpen():
                 serialobj.close()
             serialobj.open()
-            print('com3 is open', serialobj.isOpen())
+            print('Port is open', serialobj.isOpen())
             #datos_recibidos= []
         if datos['boton'] == 'on':
             if not serialobj.isOpen():
@@ -126,7 +127,7 @@ def acciones_arduino(datos):
                 serialobj.close()
             if hilo is not None:
                 parar_hilo()
-            print('com3 is open', serialobj.isOpen())
+            print('Port is open', serialobj.isOpen())
             datos['dato_prueba']= '0,0,0'
             socketio.emit('datosarduino', datos)
         #if serialobj.isOpen() and (datos['boton'] in {'on','right','left'}):
