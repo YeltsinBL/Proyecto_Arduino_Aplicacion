@@ -102,7 +102,7 @@ def acciones_arduino(datos):
     try:
         if datos['boton'] == 'conn':
             print('Puerto: ','/dev/'+datos['valor'] if 'cu.usb'in datos['valor'] else datos['valor'])
-            serialobj = serial.Serial('/dev/'+datos['valor'] if 'cu.usb'in datos['valor'] else datos['valor'],9600)
+            serialobj = serial.Serial('/dev/'+datos['valor'] if 'cu.usb'in datos['valor'] else datos['valor'],115200)
             if serialobj.isOpen():
                 serialobj.close()
             serialobj.open()
